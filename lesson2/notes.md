@@ -29,10 +29,10 @@ FIVE = 5
 1. learning to program procedurally
 2. object-oriented programming
 3. other stuff
-  - testing
-  - blocks
-  - tools
-  - problem solving
+  1. testing
+  2. blocks
+  3. tools
+  4. problem solving
 
 learning to code vs learning to program
 1. learn grammar and syntax
@@ -65,3 +65,10 @@ asking for help
 we're learning application development
 - lots of different types of programming
 - ruby is the syntax, good for all kinds of programming
+
+
+=============================================================================
+
+### **A Note on Style**
+
+
