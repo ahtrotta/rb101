@@ -13,3 +13,55 @@ FOUR = 'four'
 FIVE = 5
 ```
 5. Use `{}` instead of `do...end` if the expression fits on one line.
+6. Use `CamelCase` formatting when declaring a class name.
+
+=============================================================================
+
+### **Lecture: Kickoff**
+
+- build fluency in syntax
+- learn to think like a programmer
+- learn to build applications
+- debugging mindset
+
+3 main buckets
+
+1. learning to program procedurally
+2. object-oriented programming
+3. other stuff
+  - testing
+  - blocks
+  - tools
+  - problem solving
+
+learning to code vs learning to program
+1. learn grammar and syntax
+2. build applications
+- frustrating to jump between the two
+- pseudo code
+```
+if total cards > 21
+  then I busted
+otherwise,
+  1 hit or
+  I stay
+```
+
+looking for help
+- search using the 'right phrases'
+  - use the stack trace
+  - reading error messages
+  - adding 'ruby'
+- stack overflow
+- ruby docs
+ 
+asking for help
+- treat launch school people like coworkers
+- push everything to github
+- forums
+- chatrooms
+- TA office hours
+
+we're learning application development
+- lots of different types of programming
+- ruby is the syntax, good for all kinds of programming
