@@ -254,10 +254,47 @@ end
 -practice writing pseudo-code:
 1. a method that returns the sum of two integers:
 ```
-code here
+get an integer from the user and save to a variable
+get another integer from the user and save to a different variable
+add the two integers together and save to a new variable
+return the sum of the two integers
+```
+- more formal:
+```
+START
+
+GET integer1
+GET integer2
+PRINT integer1 + integer2
+
+END
 ```
 2. a method that takes an array of strings and returns a string that is all those strings concatenated together
 3. a method that takes an array of integers and returns a new array with every other element
 
 ============================================================================= 
 
+## **Flowchart**
+
+- flowcharts can help visually map out logical sequences
+- solving a problem using specific step-by-step logic is called the imperative or procedural way to solve a problem
+- in ruby, there is an `each` method for similar problems, and using `each` is the declarative way of solving a problem
+
+#### a larger problem
+
+problem: the user supplies N collections of numbers and we take the largest number out of each collection and display it
+
+high-level pseudo-code:
+```
+while user wants to keep going
+  - ask the user for a collection of numbers
+  - extract the largest one from that collection and save it
+  - ask the user if they want to input another collection
+
+return saved list of numbers
+```
+- the line `extract the largest one from that collection` is a sub-process that contains a lot of logic
+- declarative syntax states what you want and imperative syntax states how to get it
+when problem solving:
+1. start at a high level using declarative syntax
+2. then use imperative pseudo-code and outline specifics 
