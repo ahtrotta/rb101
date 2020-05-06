@@ -298,3 +298,130 @@ return saved list of numbers
 when problem solving:
 1. start at a high level using declarative syntax
 2. then use imperative pseudo-code and outline specifics 
+
+=============================================================================
+
+## **Debugging**
+
+- most of the day-to-day life of a programmer is spent stuck on some problem
+- the trivial code gets done quickly and then most of the time is spent analyzing and understanding a problem, experimenting or coming up with an approach, or debugging code
+
+#### temperment
+
+- if the key to programming is debugging, then the key to debugging is having a patient and logical temperment
+
+### reading error messages
+
+- when you get an error message you get a stack trace
+- be sure to carefully read the stack trace because it has a lot of information in it
+
+#### online resources
+
+1. search engine
+  - it's often useful to use a search engine to look up the error message
+  - be sure to not include terms that are specific to your computer or program
+  - sometimes different languages will use similar names for common errors
+
+2. stack overflow
+  - treasure trove!
+
+3. documentation
+  - also a good place to look
+
+#### steps to debugging
+
+1. reproduce the error
+2. determine the boundaries of the error
+  - tweak the data that caused th error
+  - do we get expected errors or does a new error occur that sheds light on the underlying problem?
+3. trace the code
+4. understand the problem well
+5. implement a fix
+  - fix one problem at a time
+6. test the fix
+
+#### techniques for debuggin
+
+1. line by line
+  - the best debugging tool is patience
+  - most bugs are from overlooking a detail
+2. rubber duck
+  - use some object (like a rubber duck) as a sounding board for talking through problems
+3. walking away
+  - this is only effective if you've first spent time loading the problem into your brain
+4. using pry
+5. using a debugger
+
+=============================================================================
+
+## **Order of Precedence**
+
+- order of precedence is the order in which operators are evaluated
+
+#### diving deeper
+
+```ruby
+array = [1, 2, 3]
+
+array.map { |num| num + 1 }  # => [2, 3, 4]
+```
+It returns `[2, 3, 4]` as expected. But what if `p` is prepended?
+```ruby
+p array.map { |num| num + 1 }  # outputs [2, 3, 4] to console
+                               # => [2, 3, 4]
+```
+Now switch `{}` block with a `do...end` block
+```ruby
+array.map do |num|
+  num + 1
+end
+```
+Same as last time, prepend with `p`
+```ruby
+p array.map do |num|
+  num + 1
+end                   # outputs #<Enumerator: [1, 2, 3]:map>
+                      # => #<Enumerator: [1, 2, 3:map>
+```
+That's odd. We got different output and a different return value.
+- blocks have the lowest precedence of all operators, but `{}` is higher than `do...end`
+- `array.map`, without the block, gets evaluated first, resolving to an `Enumerator`, which then gets passed into `p` as an argument along with `do...end` as the block
+- `p` doesn't take blocks, so the block gets ignored
+```ruby
+p array.map           # outputs <Enumerator: [1, 2, 3]:map>
+
+p array.map do |num|
+  num + 1
+end                   # outputs <Enumerator: [1, 2, 3]: map>
+```
+The code below is equivalent to the code above but it uses parentheses
+```ruby
+array = [1, 2, 3] 
+
+p(array.map) do |num|
+  num + 1                        # <Enumerator: [1, 2, 3]:map>
+end                              # => <Enumerator: [1, 2, 3]:map>
+
+p(array.map { |num| num + 1})    # [2, 3, 4]
+                                 # => [2, 3, 4]
+```
+
+#### ruby's `tap` method
+
+- helpful debugging tool
+- `tap` is an Object instance method that passes in the colling object inside a block and returns that same object back
+```ruby
+mapped_array = array.map { |num| num + 1 }
+
+mapped_array.tap { |value| p value }           # => [2, 3, 4]
+```
+- anohter use case for `tap` is to debug intermediate objects in method chains
+```ruby
+(1..10)                  .tap { |x| p x }    # 1..10
+  .to_a                  .tap { |x| p x }    # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  .select {|x| x.even? } .tap { |x| p x }    # [2, 4, 6, 8, 10]
+  .map {|x| x*x }        .tap { |x| p x }    # [4, 16, 36, 64, 100]
+```
+
+=============================================================================
+
