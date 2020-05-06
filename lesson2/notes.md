@@ -138,4 +138,126 @@ end
 
 =============================================================================
 
+## **Walk-through: Calculator**
+
+#### tips and gotchas
+
+1. in a conditional (like an `if` statement) be sure to do equality comparison with `==` as opposed to an assignment with `=`
+2. pay attention to what type of object you're comparing against
+```ruby
+if operator == 1
+# vs
+if operator == '1'
+```
+3. understand the concep tof integer division
+4. `String#to_i` and `String#to_f` are handy but read the documentation
+5. local variables initialized within an `if` statement can be accessed outside of the `if` statement
+6. `if` expressions can return a value
+```ruby
+answer = if true
+           'yes'
+         else
+           'no'
+         end
+# answer gets the value 'yes'
+```
+
+=============================================================================
+
+## **Pseudo-Code**
+
+- when you write code, you're writing it for other programs to process
+- when writing ruby, you're writing it for the ruby interpreter to process
+- a single syntax error can break the code and prevent proper processing
+- pseudo-code is meant for humans
+- when you first approach any problem it is important to understand it well
+- here is an example of pseudo-code:
+```
+Given a collection of integers.
+
+Iterate through the collection one by one.
+  - save the first value as the starting value.
+  - for each iteration, compare the saved value with the current value.
+  - if the saved value is greater or if it's the same
+    - move to the next value in the collection
+  - otherwise, if the current value is greater
+    - reassign the saved value as the current value
+
+After iterating through the collection, return the saved value
+```
+- loading a problem into your brain while working with a programming language is challenging because you are constantly struggling with syntax (probably)
+- there are two layers to solving any problem:
+1. the logical problem domain layer
+2. the syntactical programming language layer
+- psuedo-code helps to focus on the logical problem domain layer
+- the problem with pseudo-code is that we can't verify its logic
+
+#### formal pseudo-code
+
+keyword | meaning
+------- | -------
+START | start of the program
+SET | sets a variable we can use later
+GET | retrieve input from user
+PRINT | displays output to user
+READ | retrieve value from variable
+IF / ELSE IF / ELSE | show conditional branches in logic
+WHILE | show looping logic
+END | end of the program
+
+- the pseudo-code from above becomes:
+```
+START
+
+# Given a collection of integers called 'numbers'
+
+SET iterator = 1
+SET saved_number = value within numbers collection at space 1
+
+WHILE iterator <= length of numbers
+  SET current_number = value within numbers collection at space 'iterator'
+  IF saved_number >= current_number
+    go to the next iteration
+  ELSE 
+    saved_number = current_number
+
+  iterator = iterator + 1
+
+PRINT saved_number
+
+END
+```
+- we still can't verify that the logic is sound
+
+#### translating pseudo-code to program code
+
+```ruby
+def find_greatest(numbers)
+  saved_number = nil
+
+  numbers.each do |num|
+    saved_number ||= num
+    if saved_number >= num
+      next
+    else
+      saved_number = num
+    end
+  end
+
+  saved_number
+end
+```
+- what if `numbers` is `nil`? perhaps a guard clause that returns `nil`: `return if numbers.nil?`
+- perhaps `saved_number = numbers.first` before the loop and remove `saved_number ||= num` altogether
+- most of the time it will be more difficult than the provided example
+- many times you'll discover that a lot of your logic or assumptions in the pseudo-code are incorrect, and you'll need to make changes that will ripple accross the entire program
+-practice writing pseudo-code:
+1. a method that returns the sum of two integers:
+```
+code here
+```
+2. a method that takes an array of strings and returns a string that is all those strings concatenated together
+3. a method that takes an array of integers and returns a new array with every other element
+
+============================================================================= 
 
