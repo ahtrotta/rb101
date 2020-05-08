@@ -455,4 +455,197 @@ mapped_array.tap { |value| p value }           # => [2, 3, 4]
 
 =============================================================================
 
+## **Variable Scope**
+
+#### variables and blocks
+
+- ruby blocks create a new scope for local variables
+- you can think of the scope created by a blcok following a method invocation as an inner scope
+- nested blocks will create nested scopes
+- variables initialized in an outer scope can be accessed in an inner scope but not vice versa
+example:
+```ruby
+a = 1               # outer scope variable
+
+loop do             # block following 'loop' method invocation creates inner scope
+  puts a            # => 1
+  a = a + 1         # 'a' is re-assigned to a new value
+  break             # necessary to prevent infinite loop
+end
+
+puts a              # => 2 'a' was re-assigned in the inner scope
+```
+- you can change variables from an inner scope and have that change affect the outer scope
+- when instantiating a variable in an inner scope, be careful that you're not actually re-assigning an existing variable in an outer scope (another reason to avoid single-letter variable names)
+- inner scope variables cannot be accessed in outer scope
+example:
+```ruby
+loop do             # block following 'loop' method invocation creates inner scope
+  b = 1
+  break
+end
+
+puts b              # => NameError: undefined local variable...
+```
+- peer scopes do not conflict
+example:
+```ruby
+2.times do
+  a = 'hi'
+  puts a            # => 'hi' will be printed twice
+end
+
+loop do
+  puts a            # => NameError: undefined local variable or method 'a'...
+  break
+end
+
+puts a              # => NameError: undefined local variable or method 'a'...
+```
+- the initial `a = 'hi'` is scoped within the block of code that follows the `times` method
+- nested blocks follow the same rules of inner and outer scoped variables
+- initializing a variable that has the same name as another variable in the outer scope will prevent access to the outer-scope variable in the inner scope, a prcoess called variable shadowing
+```ruby
+n = 10
+
+[1, 2, 3].each do |n|
+  puts n
+end
+```
+- the `puts n` will use the block paramer `|n|` and will disregard the outer scoped variable
+another example:
+```ruby
+n = 10
+
+1.times do |n|
+  n = 11
+end
+
+puts n            # => 10
+```
+- it is good to avoid variable shadowing
+- choosing long and descriptive variable names helps avoid this
+
+#### variables and method definitions
+
+- a method's scope is entirely self-contained
+- the only variables a method definition has access to are those that are passed into the method definition (NOTE: only talking about local variables for now)
+- a method definition has no notion of 'outer' or 'inner' scope
+example:
+```ruby
+a = 'hi'
+
+def some_method
+  puts a
+end
+
+some_method         # => NameError: undefined local variable or method 'a'...
+```
+example:
+```ruby
+def some_method(a)
+  puts a
+end
+
+some_method(5)      # => 5
+```
+
+#### constants
+
+- the scoping rules for constants are not the same as local variables
+- constants behave like globals
+example:
+```ruby
+USERNAME = 'Batman'
+
+def authenticate
+  puts "Logging in #{USERNAME}"
+end
+
+authenticate        # => Logging in Batman
+```
+another example:
+```ruby
+FAVORITE_COLOR = 'taupe'
+
+1.times do
+  puts "I love #{FAVORITE_COLOR}!" # => I love taupe!
+end
+```
+another example:
+```ruby
+loop do
+  MY_TEAM = "Phoenix Suns"
+  break
+end
+
+puts MY_TEAM        # => Phoenix Suns
+```
+- constants have lexical scope
+
+=============================================================================
+
+## **More Variable Scope**
+
+- method definition is when, within our code, we define a ruby method using the `def` keyword
+- method invocation is when we call a method, whether that happens to be an existing method or a custom method that we've defined
+- a block is part of the method invocation
+- method invocation followed by `{}` or `do...end` is the way in which we define a block in ruby
+- when a method is called with a block it acts as an argument to that method
+```ruby
+def greetings
+  puts "Goodbye"
+end
+
+word = "Hello"
+
+greetings do
+  puts word
+end
+
+# outputs "Goodbye"
+```
+- in the above example, the greetings method is invoked with a block, but the method doesn't know how to handle a block so the block is not executed
+```ruby
+def greetings
+  yield
+  puts "Goodbye"
+end
+
+word = "Hello"
+
+greetings do
+  puts word
+end
+
+# Outputs "Hello"
+# Outputs "Goodbye"
+```
+- in the above example, the `yield` keyword is what controls the interaction with the block
+- the block has access to the local variable `word`, so `Hello` is output when the block is executed
+- the level of interaction between blocks and methods is set by the method definition and then used at method invocation
+- when invoking a method with a block, we aren't limited to executing code within the block; depending on the method definition, the method can use the return value of the block to perform some other action
+```ruby
+a = "hello"
+
+[1, 2, 3].map { |num| a } # => ["hello", "hello", "hello"]
+```
+- the `Array#map` method uses the return value of the block to perform transformation on each element in an array
+- in the above example, `#map` doesn't have direct access to `a` but it can use the value of `a` through the block
+
+#### review
+
+- method definitions cannot directly access local variables initialized outside of the method definition
+- local variables initialized outside of the method definition cannot be reassigned from within the method definition
+- a block can access local variables initialized outside of the block and can reassign those variables
+- methods can access local variables passed in as arguments
+- methods can access local variables through interaction with blocks
+- we can think of method definition as setting a certain scope for any local variables in terms of the parameters that the method definition has, what it does with those parameters, and how it interacts (if at all) with a block
+- we can think of method invocation as using the scope set by the method definition
+- if the method can use a block, then the scope of the block can provide additional flexibility in terms of how the method invocation interacts with its surroundings
+
+=============================================================================
+
+## **Pass by Reference vs Pass by Value**
+
 
