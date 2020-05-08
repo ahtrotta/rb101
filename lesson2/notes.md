@@ -425,3 +425,34 @@ mapped_array.tap { |value| p value }           # => [2, 3, 4]
 
 =============================================================================
 
+## **Coding Tips**
+
+- the more repetition, the more things get burned into your memory
+- spending a long time debugging something is never a waste of time, you'll permanently remember what the problem was
+- "If you are serious about programming and you want to do it for years and maybe decades from today, then the hours you put into debugging litle things are really going to help you retain knowledge for the long haul."
+- there's no need to save on characters, choose descriptive variable and method names
+- "In programming, naming things is very hard. Unfortunately, this problem isn't obvious when you write small programs, but it really impedes flow when you're working on larger programs. Try to develop a habit of thinking aobut how to name things descriptively."
+- One exception to the above is when you have a very small block of code
+- "In Ruby, make sure to use `snake_case` when naming everything, except classes which are `CamelCase` or constants, which are `UPPERCASE`."
+- don't change values of constants, even though the language allows it
+
+#### method guidelines
+- mehtods should do one thing, so they should be relatively short (around 10 lines or so)
+- don't display something to the output and return a meaningful value
+- decide whether the method should return a value with no side effects or perform side effects with no return value
+- methods should be at the same level of abstraction
+- method names should reflect mutation
+- generally, the more you have to think about a method the harder it is to use
+- build small methods that are like LEGO blocks; stand-alone pieces of functionality that you can use to piece together larger structures
+- refactor your code to reflect growing clarity
+- similar process to writing; first draft is almost exploratory, dumping out ideas all over the place. as your narrative comes into more focus, the structure of your piece can become more organized and clean
+- one suggestion for moethods that display things is to prefix them with `print_`, `say_`, or `display`
+
+#### miscellaneous tips
+- don't prematurely exit the program; the program should probably only have one exit point
+- name methods from the perspective of using them later
+- avoid assignment within a conditional because it's hard to read
+
+=============================================================================
+
+
