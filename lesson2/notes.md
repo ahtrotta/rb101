@@ -648,4 +648,63 @@ a = "hello"
 
 ## **Pass by Reference vs Pass by Value**
 
+- what happens to objects when passed into methods?
+- in most languages you either treat these arguments as 'references' to the original object or as 'values' which are copies of the original
+- when something is passed by value, the method only has a copy, so operations performed on the object within the method have no effect on the original object
+- some rubyists say ruby is 'pass by value' because re-assigning the object within the method doesn't affect the object outside the method:
+```ruby
+def change_name(name)
+  name = 'bob'
+end
+
+name = 'jim'
+change_name(name)
+puts name                     # => jim
+```
+- note that even though there are two local variables named `name` this is not an example of variable shadowing because the main scope variable is not accessible to the method
+- it looks like the main scope `name` was passed in by value (copy) because re-assigning the variable only affected the method-level variable and not the main scope variable
+- if ruby was indeed pure pass by value, then there should be no way for operations within a method to cause changes to the original object
+```ruby
+def cap(str)
+  str.capitalize!
+end
+
+name = "jim"
+cap(name)
+puts name                     # => Jim
+```
+- the above example implies that ruby is pass by reference because operation(s) within the method affected the original object
+- ruby exhibits a combination of behaviors from both pass by reference and pass by value
+- when an operation within the method mutates the caller it will affect the original object
+```ruby
+def add_name(arr, name)
+  arr << name
+end
+
+names = ['bob', 'kim']
+add_name(names, 'jim')
+puts names.inspect            # => ["bob", "kim", "jim"]
+```
+- remember that re-assignment is not a destructive operation
+```ruby
+def add_name(arr, name)
+  arr = arr + [name]
+end
+
+names = ['bob', 'kim']
+add_names(names, 'jim')
+puts.names.inspect            # => ["bob", "kim"]
+```
+- making a tiny change will change the ouptut
+```ruby
+def add_name(arr, name)
+  arr = arr + [name]
+end
+
+names = ['bob', 'kim']
+add_names(names, 'jim')
+puts.names.inspect            # => ["bob", "kim"]
+```
+- when we use `+` to concatenate two arrays together it returns a new array and doesn't mutate the original
+- when we use `<<` to append a new value it is mutating the original array and not returning a new array
 
