@@ -707,4 +707,154 @@ puts.names.inspect            # => ["bob", "kim"]
 ```
 - when we use `+` to concatenate two arrays together it returns a new array and doesn't mutate the original
 - when we use `<<` to append a new value it is mutating the original array and not returning a new array
+- it is often said that ruby is pass by reference value, which means that ruby passes around copies of the references to objects
+- this is a sort of third strategy that blends pass by reference and pass by value
+- in a pure pass by value language assignment would be a mutating operation
 
+=============================================================================
+
+## **Coding Tips 2**
+
+#### using new lines to organize code
+
+- new lines are important visual cues in your program
+making your code readable is of paramount importance, not only to other, but also to your future self
+```ruby
+# bad
+
+name = ''
+puts "Enter your name: "
+loop do
+  name = gets.chomp
+  break unless name.empty?
+  puts "That's an invalid name. Try again:"
+end
+puts "Welcome #{name}!"
+puts "What would you like to do?"
+```
+- use some new lines to separate the different concerns in the code
+```ruby
+# better
+
+name = ''
+
+puts "Enter your name: "
+loop do
+  name = gets.chomp
+  break unless name.empty?
+  puts "That's an invalid name. Try again:"
+end
+
+puts "Welcome #{name}!"
+puts "What would you like to do?"
+```
+now the code is roughly divided into three parts
+1. variable initialization
+2. user input and validation
+3. using the variable
+
+#### should a method return or display?
+
+- understand if a method returns a value, or has side effects, or both
+- 'side effects' means displaying something to the output or mutating an object
+```ruby
+# side effect: displays something to the output
+# returns: nil
+
+def total(num1, num2)
+  puts num1 + num2
+end
+
+# side effect: mutates the passed-in array
+# returns: updated array
+
+def append(target_array, value_to_append)
+  target_array << value_to_append
+end
+```
+- here's a method with no side effects
+```ruby
+# side effects: none
+# returns: new integer
+
+def total(num1, num2)
+  num1 + num2
+end
+```
+- generally, if a method has both side effects and a meaningful return value, it's a red flag because it will be difficult to use these methods in the future
+
+#### name methods appropriately
+
+- choose good method names to help you remember what each method does
+- if a method outputs values, then preface that method with `display_` or `print_`
+- if you find yourself constantly looking at a method's implementation every time you use it, it's a sign that the method needs to be improved
+- a method should do one thing and be named appropriately
+- don't mix write a method that mutates, outputs, and returns a meaningful value
+
+#### don't mutate the caller during iteration
+
+- suppose we have an array of strings and we want to iterate over the array and print each element
+```ruby
+words = %w(scooby doo on channel two)
+words.each { |str| puts str }
+```
+- now let's mutate the elements in the array
+```ruby
+words = %w(scooby doo on channel two)
+words.each { |str| puts str << '!' }
+puts words.inspect                   # => ["scooby!", "doo!", "on!", "channel!", "two!"]
+```
+- Note that we aren't adding elements to or removing elements from `words` but we're mutating each element within the `words` array
+- the above is also typical ruby
+- now suppose we want to remove each element as we're iterating
+```ruby
+words = %(scooby doo on channel two)
+words.each { |str| words.delete(str) }
+puts words.inspect                   # => ["doo", "channel"]
+```
+- don't mutate a collection while iterating through it
+- you can mutate the individual elements within the collection, just not the collection itself
+
+#### variable shadowing
+
+- variable shadowing occurs when you choose a local variable in an inner scope that shares the same name as an outer scope variable
+- this essentially prevents you from accessing the outer scope variable from the inner scope
+
+#### don't use assignment in a conditional
+
+- it's not clear whether you meant to use `==` or if you indeed meant to do assignment
+- you'll sometimes see experienced rubyists do this
+```ruby
+numbers = [1, 2, 3, 4, 5]
+
+while num = numbers.shift
+  puts num
+end
+```
+- while this code works it's hard to read and future programmers can't be 100% confident that this is what you meant to do
+- if you must do it, wrap the assignment in parentheses
+```ruby
+numbers = [1, 2, 3, 4, 5]
+
+while (num = numbers.shift)
+  puts num
+end
+```
+
+#### use underscore for unused parameters
+
+```ruby
+names = ['kim', 'joe', 'sam']
+names.each { |_| puts "got a name!" }
+```
+
+#### gain experience through struggling
+
+two things that beginners feel at this stage
+1. want to know the 'best' or 'right' way to do something and want to learn the 'best practice'
+2. too much time being wasted on debugging and not doing things correctly the first time
+- it's less useful to learn 'best practices' without learning why they are best practices
+- struggling through 'bad' or suboptimal practices first is not wasting time
+- don't be afraid of violating rules or make mistakes but keep an eye out for improvements
+
+=============================================================================
