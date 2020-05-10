@@ -1,5 +1,9 @@
 VALID_CHOICES = %w(rock paper scissors lizard spock)
 
+def prompt(message)
+  Kernel.puts("=> #{message}")
+end
+
 def win?(first, second)
   results = {
     'rock' => %w(scissors lizard),
@@ -21,10 +25,6 @@ def display_results(player, computer)
   end
 end
 
-def prompt(message)
-  Kernel.puts("=> #{message}")
-end
-
 def choice_expansion(input)
   case input
   when 'r'    then 'rock'
@@ -32,7 +32,7 @@ def choice_expansion(input)
   when 's'    then 'scissors'
   when 'l'    then 'lizard'
   when 'k'    then 'spock'
-  else              input
+  else             input
   end
 end
 
