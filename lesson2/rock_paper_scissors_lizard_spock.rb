@@ -25,6 +25,17 @@ def prompt(message)
   Kernel.puts("=> #{message}")
 end
 
+def choice_expansion(input)
+  case input
+  when 'r'    then 'rock'
+  when 'p'    then 'paper'
+  when 's'    then 'scissors'
+  when 'l'    then 'lizard'
+  when 'k'    then 'spock'
+  else              input
+  end
+end
+
 score = [0, 0]
 
 loop do
@@ -32,14 +43,7 @@ loop do
   loop do
     prompt("Choose one: (r)ock, (p)aper, (s)cissors, (l)izard, spoc(k)")
     choice = Kernel.gets().chomp()
-    
-    case choice
-    when 'r'    then choice = 'rock'
-    when 'p'    then choice = 'paper'
-    when 's'    then choice = 'scissors'
-    when 'l'    then choice = 'lizard'
-    when 'k'    then choice = 'spock'
-    end
+    choice = choice_expansion(choice)
 
     if VALID_CHOICES.include?(choice)
       break
