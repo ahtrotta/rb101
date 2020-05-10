@@ -1,16 +1,14 @@
 VALID_CHOICES = %w(rock paper scissors lizard spock)
 
 def win?(first, second)
-  (first == 'rock' && second == 'scissors') ||
-    (first == 'paper' && second == 'rock') ||
-    (first == 'scissors' && second == 'paper') ||
-    (first == 'rock' && second == 'lizard') ||
-    (first == 'paper' && second == 'spock') ||
-    (first == 'scissors' && second == 'lizard') ||
-    (first == 'lizard' && second == 'spock') ||
-    (first == 'lizard' && second == 'paper') ||
-    (first == 'spock' && second == 'rock') ||
-    (first == 'spock' && second == 'scissors')
+  results = {
+    'rock' => %w(scissors lizard),
+    'paper' => %w(rock spock),
+    'scissors' => %w(paper lizard),
+    'lizard' => %w(spock paper),
+    'spock' => %w(rock scissors)
+  }
+  results[first].include?(second)
 end
 
 def display_results(player, computer)
