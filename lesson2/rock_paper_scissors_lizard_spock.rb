@@ -30,8 +30,16 @@ end
 loop do
   choice = ''
   loop do
-    prompt("Choose one: #{VALID_CHOICES.join(', ')}")
+    prompt("Choose one: (r)ock, (p)aper, s(c)issors, (l)izard, s(p)ock")
     choice = Kernel.gets().chomp()
+    
+    case choice
+    when 'r'    then choice = 'rock'
+    when 'p'    then choice = 'paper'
+    when 'c'    then choice = 'scissors'
+    when 'l'    then choice = 'lizard'
+    when 'p'    then choice = 'spock'
+    end
 
     if VALID_CHOICES.include?(choice)
       break
