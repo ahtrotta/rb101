@@ -631,8 +631,9 @@ irb :003 > end
 ```
 - the `select` and `map` methods are defined in a module called Enumerable and are made available to the `Array` and `Hash` classes
 - certain collection types have access to specific methods for a reason
+
 Method | Action | Considers the return value of the block? | Returns a new collection from the method? | Length of the returned collection
------ | ----- | ----- | ----- | -----
+------ | ------ | ---------------------------------------- | ----------------------------------------- | ---------------------------------
 `each` | Iteration | No | No, it returns the original | Length of original
 `select` | Selection | Yes, its truthiness | Yes | Length of original or less
 `map` | Transformation | Yes | Yes | Length of original
