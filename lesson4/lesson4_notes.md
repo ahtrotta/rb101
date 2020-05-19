@@ -153,7 +153,7 @@ example:
 # change_me("I LOVE my mom and dad equally") == "I LOVE my MOM and DAD equally"
 ```
 After reading, some items may need clarification:
-1. **What is a palindrom?** 
+1. **What is a palindrome?** 
 2. **Should the words in the string remain the same if they already use uppercase?** Check the test cases. In the fourth one, `LOVE` already uses uppercase and remains uppercase in the solution
 3. **How should I deal with empty strings provided as input?** Test case 3 provides the answser.
 4. **Can I assume that all inputs are strings?** Test cases don't show any non-string inputs, so ask the interviewer.
@@ -456,7 +456,7 @@ def double_numbers!(numbers)
   numbers
 end
 ```
-- transformation can only occur on a subset of elements in the collection
+- transformation can occur on a subset of elements in the collection
 ```ruby
 def double_odd_numbers(numbers)
   doubled_numbers = []
