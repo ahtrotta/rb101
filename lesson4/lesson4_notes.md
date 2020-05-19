@@ -640,4 +640,157 @@ Method | Action | Considers the return value of the block? | Returns a new colle
 
 =============================================================================
 
+## **More Methods**
 
+#### `Enumerable#any?`
+
+```ruby
+[1, 2, 3].any? do |num|
+  num > 2
+end
+# => true
+```
+- there are two return values that matter: the return value of the method and the return value of the block
+- `any?` looks at the truthiness of the block's return value to determine what the method's return value will be
+- `any?` can also be used with a hash
+```ruby
+{ a: "ant", b: "bear", c: "cat" }.any? do |key, value|
+  value.size > 4
+end
+# => false
+```
+
+#### `Enumerable#all?`
+
+- `all?` looks at the truthiness of the block's return value, returning `true` if the block's return value in every iteration is truthy
+```ruby
+[1, 2, 3].all? do |num|
+  num > 2
+end
+# => false
+
+{ a: "ant", b: "bear", c: "cat" }.all? do |key, value|
+  value.length >= 3
+end
+# => true
+```
+
+#### `Enumerable#each_with_index`
+
+- almost the same as `each`, but the block takes a second argument that represents the index of each element
+```ruby
+[1, 2, 3].each_with_index do |num, index|
+  puts "The index of #{num} is #{index}."
+end
+
+# The index of 1 is 0.
+# The index of 2 is 1.
+# The index of 3 is 2.
+# => [1, 2, 3]
+```
+- when called on a hash, the first argument represents an array containing both the key and the value
+```ruby
+{ a: "ant", b: "bear", c: "cat" }.each_with_index do |pair, index|
+  puts "The index of #{pair} is #{index}."
+end
+
+# The index of [:a, "ant"] is 0.
+# The index of [:b, "bear"] is 1.
+# The index of [:c, "cat"] is 2.
+# => { :a => "ant", :b => "bear", :c => "cat" }
+```
+
+#### `Enumerable#each_with_object`
+
+- `each_with_object` takes a method argument that is a collection object that will be returned by the method
+- the block takes two arguments: the first is the current argument and the second is the collection object that was passed in
+```ruby
+[1, 2, 3].each_with_object([]) do |num, array|
+  array << num if num.odd?
+end
+# => [1, 3]
+```
+- similar to `each_with_index`, the first block argument turns into an array when `each_with_object` is invoked on a hash
+```ruby
+{ a: "ant", b: "bear", c: "cat" }.each_with_object([]) do |pair, array|
+  array << pair.last
+end
+# => ["ant", "bear", "cat"]
+```
+- it's possible to use parentheses to capture the key and value in the first block argument
+```ruby
+{ a: "ant", b: "bear", c: "cat" }.each_with_object({}) do |(key, value), hash|
+  hash[value] = key
+end
+# => { "ant" => :a, "bear" => :b, "cat" => :c }
+```
+
+#### `Enumerable#first`
+
+- `first` doesn't take a block, but it takes an optional argument representing the number of elements to return (the default value is 1)
+```ruby
+[1, 2, 3].first
+# => 1
+```
+- first can also be used on a hash
+```ruby
+{ a: "ant", b: "bear", c: "cat" }.first(2)
+# => [[:a, "ant"], [:b, "bear"]]
+```
+1. hashes are typically thought of as unordered, but since ruby 1.9, order is preserved according to the order of insertion, so calling `first` on a hash doesn't quite make sense but ruby lets you do it
+2. the return value is a nested array, which is unexpected (a hash would be expected)
+- generally, `first` is not called on a hash, and is most often used with arrays
+
+#### `Enumerable#include?`
+
+- returns `true` if the argument exists in the collection and `false` otherwise
+```ruby
+[1, 2, 3].include?(1)
+# => true
+```
+- when called on a hash, `include?` only checks the keys and not the values
+```ruby
+{ a: "ant", b: "bear", c: "cat" }.include?("ant")
+# => false
+
+{ a: "ant", b: "bear", c: "cat" }.include?(:a)
+# => true
+```
+- `Hash#include?` is basically an alias for `Hash#key?` or `Hash#has_key?`
+- to find out if a value exists within a hash, we could use the `Hash#value?` or `Hash#has_value?` methods
+
+#### `Enumerable#partition`
+
+- divides the collection into two collections depending on the block's return value
+```ruby
+[1, 2, 3].partition do |num|
+  num.odd?
+end
+# => [[1, 3], [2]]
+```
+- the return value is a nested array
+- the idiomatic way to use it is to use parallel assignment
+```ruby
+odd, even = [1, 2, 3].partition do |num|
+  num.odd?
+end
+
+odd  # => [1, 3]
+even # => [2]
+```
+- even if the collection is a hash, the return value of `partition` will be an array
+```ruby
+long, short = { a: "ant", b: "bear", c: "cat" }.partition do |key, value|
+  value.size > 3
+end
+# => [[[:b, "bear"]], [[:a, "ant"], [:c, "cat"]]]
+```
+
+#### summary
+
+method documentation will generally include:
+1. one or more method signatures indicating whether the method takes arguments and/or a block and what it returns
+2. a brief description of how the method is used, often covering different use cases
+3. some code examples
+
+=============================================================================
