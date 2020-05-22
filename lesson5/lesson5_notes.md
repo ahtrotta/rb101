@@ -434,4 +434,68 @@ end
 # => [[27], ["apple"]]
 ```
 - it might seem like a good idea to reach for `select` to perform selection, but that won't work since we're working with a nested array
+- we need to access the nested arrays before we can select the value we want
+
+#### example 9
+
+```ruby
+[[[1], [2], [3], [4]], [['a'], ['b'], ['c']]].map do |element1|
+  element1.each do |element2|
+    element2.partition do |element3|
+      element3.size > 0
+    end
+  end
+end
+# => [[[1], [2], [3], [4]], [["a"], ["b"], ["c"]]]
+```
+- the first method call within `map` is `each`, and we know that `each` doesn't care about the block's return value--it always returns the calling object
+- therefore, the return value of `map` will be a new array that matches the value of the calling object
+
+#### example 10
+
+```ruby
+[[[1, 2], [3, 4]], [5, 6]].map do |arr|
+  arr.map do |el|
+    if el.to_s.size == 1    # it's an integer
+      el + 1
+    else                    # it's an array
+      el.map do |n|
+        n + 1
+      end
+    end
+  end
+end
+```
+
+#### mutating collections while iterating
+
+- do not mutate the collection that you're iterating through
+```ruby
+# The method remove_evens! should delete all even numbers from the array passed in as the argument.
+
+def remove_evens!(arr)
+  arr.each do |num|
+    if num % 2 == 0
+      arr.delete(num)
+    end
+  end
+  arr
+end
+
+p remove_evens!([1,1,2,3,4,6,8,9])
+# expected return value [1, 1, 3, 9]
+# actual return value [1, 1, 3, 6, 9]
+```
+- one way to fix it is to make a shallow copy
+```ruby
+def remove_evens!(arr)
+  cloned_arr = arr.dup
+  cloned_arr.each do |num|
+    if num % 2 == 0
+      arr.delete(num)
+    end
+  end
+  arr
+end
+```
 
