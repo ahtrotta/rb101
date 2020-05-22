@@ -421,4 +421,17 @@ end
 
 #### example 8
 
+```ruby
+[[8, 13, 27], ['apple', 'banana', 'cantaloupe']].map do |arr|
+  arr.select do |item|
+    if item.to_s.to_i == item    # if it's an integer
+      item > 13
+    else
+      item.size < 6
+    end
+  end
+end
+# => [[27], ["apple"]]
+```
+- it might seem like a good idea to reach for `select` to perform selection, but that won't work since we're working with a nested array
 
