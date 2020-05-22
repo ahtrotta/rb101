@@ -48,4 +48,41 @@
 '}'.ord # => 125
 'b' <=> '}' # => -1
 ```
+1. uppercase letters come before lowercase letters
+2. digits and (most) punctuation come before letters
+3. there is an extended ASCII table containing accented and other characters, these come after the main ASCII table
 
+#### the `sort` method
+
+- it's possible to call `sort` with a block, giving us more control over how the items are sorted
+- the block needs two arguments (the two items to be compared) and the return value must be `-1`, `0`, `1`, and `nil`
+```ruby
+[2, 5, 3, 4, 1].sort do |a, b|
+  a <=> b
+end
+# => [1, 2, 3, 4, 5]
+```
+- in the above example, we're just using `Integer#<=>` to perform the comparison, which is what `sort` would have done without the block
+- the below example switches the order, returning the array in descending order
+```ruby
+[2, 5, 3, 4, 1].sort do |a, b|
+  b <=> a
+end
+# => [5, 4, 3, 2, 1]
+```
+- additional code can be written in the block as long as the return value is `-1`, `0`, `1`, and `nil`
+```ruby
+[2, 5, 3, 4, 1].sort do |a, b|
+  puts "a is #{a} and b is #{b}"
+  a <=> b
+end
+# a is 2 and b is 5
+# a is 4 and b is 1
+# a is 3 and b is 1
+# a is 3 and b is 4
+# a is 2 and b is 1
+# a is 2 and b is 3
+# a is 5 and b is 3
+# a is 5 and b is 4
+# => [1, 2, 3, 4, 5]
+```
