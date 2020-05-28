@@ -29,15 +29,15 @@ def display_board(brd)
   system 'clear'
   puts "You're #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
   puts ""
-  puts "     |     |"
+  puts "1    |2    |3"
   puts "  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}"
   puts "     |     |"
   puts "-----+-----+-----"
-  puts "     |     |"
+  puts "4    |5    |6"
   puts "  #{brd[4]}  |  #{brd[5]}  |  #{brd[6]} "
   puts "     |     |"
   puts "-----+-----+-----"
-  puts "     |     |"
+  puts "7    |8    |9"
   puts "  #{brd[7]}  |  #{brd[8]}  |  #{brd[9]} "
   puts "     |     |"
   puts ""
@@ -65,10 +65,17 @@ def player_places_piece(brd)
   brd[square] = PLAYER_MARKER
 end
 
-def threat_finder(brd)
+def finder(brd, mode)
+  marker = nil
+  if mode == :defense
+    marker = PLAYER_MARKER
+  elsif mode == :offense
+    marker = COMPUTER_MARKER
+  end
+
   WINNING_LINES.each do |line|
     current_line = line.map { |num| brd[num] }
-    if current_line.count(PLAYER_MARKER) == 2 &&
+    if current_line.count(marker)== 2 &&
        current_line.count(INITIAL_MARKER) == 1
       return line[current_line.index(INITIAL_MARKER)]
     end
@@ -78,8 +85,12 @@ end
 
 def computer_places_piece(brd)
   square = nil
-  if threat_finder(brd)
-    square = threat_finder(brd)
+  if finder(brd, :offense)
+    square = finder(brd, :offense)
+  elsif finder(brd, :defense)
+    square = finder(brd, :defense)
+  elsif brd[5] == INITIAL_MARKER
+    square = 5
   else
     square = empty_squares(brd).sample
   end
