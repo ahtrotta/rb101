@@ -65,8 +65,24 @@ def player_places_piece(brd)
   brd[square] = PLAYER_MARKER
 end
 
+def threat_finder(brd)
+  WINNING_LINES.each do |line|
+    current_line = line.map { |num| brd[num] }
+    if current_line.count(PLAYER_MARKER) == 2 &&
+       current_line.count(INITIAL_MARKER) == 1
+      return line[current_line.index(INITIAL_MARKER)]
+    end
+  end
+  nil
+end
+
 def computer_places_piece(brd)
-  square = empty_squares(brd).sample
+  square = nil
+  if threat_finder(brd)
+    square = threat_finder(brd)
+  else
+    square = empty_squares(brd).sample
+  end
   brd[square] = COMPUTER_MARKER
 end
 
@@ -81,14 +97,15 @@ end
 def detect_winner(brd)
   WINNING_LINES.each do |line|
     if brd.values_at(*line).count(PLAYER_MARKER) == 3
-      return 'Player'
+      return 'player'
     elsif brd.values_at(*line).count(COMPUTER_MARKER) == 3
-      return 'Computer'
+      return 'computer'
     end
   end
   nil
 end
 
+score = { computer: 0, player: 0 }
 loop do
   board = initialize_board
 
@@ -103,10 +120,18 @@ loop do
   end
 
   if someone_won?(board)
-    prompt "#{detect_winner(board)} won!"
+    score[detect_winner(board).to_sym] += 1
+    prompt "#{detect_winner(board).capitalize} won!"
+    prompt "The score is computer: #{score[:computer]}, player: #{score[:player]}."
   else
     prompt "It's a tie!"
   end
+  
+  if score.values.include?(5)
+    prompt "#{detect_winner(board).capitalize} is the grand champion!"
+    break
+  end
+
   prompt "Play again? (y or n)"
   answer = gets.chomp
   break unless answer.downcase.start_with?('y')
