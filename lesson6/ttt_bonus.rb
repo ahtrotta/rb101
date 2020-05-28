@@ -1,5 +1,6 @@
 require 'pry'
 
+FIRST_MOVE = 'choose'
 WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9],
                  [1, 4, 7], [2, 5, 8], [3, 6, 9],
                  [1, 5, 9], [3, 5, 7]]
@@ -120,12 +121,37 @@ score = { computer: 0, player: 0 }
 loop do
   board = initialize_board
 
+  first = FIRST_MOVE
+  if first == 'choose'
+    loop do
+      prompt 'Who should go first? (p)layer or (c)omputer?'
+      response = gets.chomp
+
+      if response.start_with?('p')
+        first = 'player'
+        break
+      elsif response.start_with?('c')
+        first = 'computer'
+        break
+      end
+
+      prompt 'Please try again.'
+    end
+  end
+
   loop do
     display_board(board)
-    player_places_piece(board)
-    display_board(board)
-    break if someone_won?(board) || board_full?(board)
-    computer_places_piece(board)
+    if first == 'player'
+      player_places_piece(board)
+      display_board(board)
+      break if someone_won?(board) || board_full?(board)
+      computer_places_piece(board)
+    elsif first == 'computer'
+      computer_places_piece(board)
+      display_board(board)
+      break if someone_won?(board) || board_full?(board)
+      player_places_piece(board)
+    end
     display_board(board)
     break if someone_won?(board) || board_full?(board)
   end
