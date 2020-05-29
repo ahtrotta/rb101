@@ -122,43 +122,33 @@ def place_piece(brd, player)
   computer_places_piece(brd) if player == 'computer'
 end
 
-score = { computer: 0, player: 0 }
-loop do
-  board = initialize_board
-
-  first = FIRST_MOVE
-  if first == 'choose'
+def who_goes_first?(initial_value)
+  if initial_value == 'choose'
     loop do
       prompt 'Who should go first? (p)layer or (c)omputer?'
       response = gets.chomp
 
       if response.start_with?('p')
-        first = 'player'
+        'player'
         break
       elsif response.start_with?('c')
-        first = 'computer'
+        'computer'
         break
       end
 
       prompt 'Please try again.'
     end
+  else
+    initial_value
   end
+end
 
-  current_player = first
+score = { computer: 0, player: 0 }
+loop do
+  board = initialize_board
+  current_player = who_goes_first?(FIRST_MOVE)
+  
   loop do
-#    display_board(board)
-#    if first == 'player'
-#      player_places_piece(board)
-#      display_board(board)
-#      break if someone_won?(board) || board_full?(board)
-#      computer_places_piece(board)
-#    elsif first == 'computer'
-#      computer_places_piece(board)
-#      display_board(board)
-#      break if someone_won?(board) || board_full?(board)
-#      player_places_piece(board)
-#    end
-#    display_board(board)
     display_board(board)
     place_piece(board, current_player)
     current_player = current_player == 'player' ? 'computer' : 'player'
