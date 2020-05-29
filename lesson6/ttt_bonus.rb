@@ -117,6 +117,11 @@ def detect_winner(brd)
   nil
 end
 
+def place_piece(brd, player)
+  player_places_piece(brd) if player == 'player'
+  computer_places_piece(brd) if player == 'computer'
+end
+
 score = { computer: 0, player: 0 }
 loop do
   board = initialize_board
@@ -139,22 +144,28 @@ loop do
     end
   end
 
+  current_player = first
   loop do
+#    display_board(board)
+#    if first == 'player'
+#      player_places_piece(board)
+#      display_board(board)
+#      break if someone_won?(board) || board_full?(board)
+#      computer_places_piece(board)
+#    elsif first == 'computer'
+#      computer_places_piece(board)
+#      display_board(board)
+#      break if someone_won?(board) || board_full?(board)
+#      player_places_piece(board)
+#    end
+#    display_board(board)
     display_board(board)
-    if first == 'player'
-      player_places_piece(board)
-      display_board(board)
-      break if someone_won?(board) || board_full?(board)
-      computer_places_piece(board)
-    elsif first == 'computer'
-      computer_places_piece(board)
-      display_board(board)
-      break if someone_won?(board) || board_full?(board)
-      player_places_piece(board)
-    end
-    display_board(board)
+    place_piece(board, current_player)
+    current_player = current_player == 'player' ? 'computer' : 'player'
     break if someone_won?(board) || board_full?(board)
   end
+
+  display_board(board)
 
   if someone_won?(board)
     score[detect_winner(board).to_sym] += 1
