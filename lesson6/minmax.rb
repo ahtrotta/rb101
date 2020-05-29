@@ -39,65 +39,15 @@ def switch_player(marker)
   marker == COMPUTER_MARKER ? PLAYER_MARKER : COMPUTER_MARKER
 end
 
-# def minmax(brd, marker, vals)
-#   brd_copy = deep_copy_board(brd)
-#   brd_copy.each do |loc, mark|
-#     if mark == INITIAL_MARKER
-#       brd_copy[loc] = marker
-#       binding.pry
-#       if someone_won?(brd_copy)
-#         vals[loc] += 1 if detect_winner(brd_copy) == 'computer'
-#         vals[loc] -= 1 if detect_winner(brd_copy) == 'player'
-#         return nil
-#       elsif board_full?(brd_copy)
-#         return nil
-#       else
-#         minmax(brd_copy, switch_player(marker), vals)
-#       end
-#     end
-#   end
-# end
-# 
-# board = { 1=>'X', 2=>' ', 3=>'O', 4=>'O', 5=>' ', 6=>' ', 7=>'O', 8=>'X', 9=>'X' }
-# p minmax_values = empty_squares(board).map { |index| [index, 0] }.to_h
-# minmax(board, COMPUTER_MARKER, minmax_values)
-# p minmax_values
-#  
-# def minmax(brd, player_marker, vals)
-#   vals.each do |brd_loc, _|
-#     if brd[brd_loc] == INITIAL_MARKER
-#       brd_copy = deep_copy_board(brd)
-#       brd_copy[brd_loc] = player_marker
-# 
-#       if someone_won?(brd_copy)
-#         return 1 if detect_winner(brd_copy) == 'computer'
-#         return -1 if detect_winner(brd_copy) == 'player'
-#       elsif board_full?(brd_copy)
-#         return 0
-#       end
-# 
-#       player_marker = switch_player(player_marker)
-# 
-#       minmax(brd_copy, player_marker, vals)
-#     end
-#   end
-# end
-
-def minmax(brd, marker, loc, vals)
-  if someone_won?(brd)
-    vals[loc] += 1 if detect_winner(brd) == 'computer'
-    vals[loc] -= 1 if detect_winner(brd) == 'player'
-    return 0
-  elsif board_full?(brd)
-    return 0
-  else
-    empty_squares(brd).each do |new_loc|
-      brd_copy = deep_copy_board(brd)
-      brd_copy[new_loc] = marker
-      minmax(brd_copy, switch_player(marker), loc, vals)
-    end
-  end
+def score(brd)
+  return 1 if detect_winner(brd) == 'computer'
+  return -1 if detect_winner(brd) == 'player'
+  return 0
 end
+
+def minmax(brd)
+  return score(brd) if someone_won?(brd) || board_full?(brd)
+end 
 
 board = { 1=>'O', 2=>'X', 3=>' ', 4=>' ', 5=>'X', 6=>' ', 7=>' ', 8=>' ', 9=>' ' }
 
