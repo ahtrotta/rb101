@@ -76,7 +76,7 @@ def finder(brd, mode)
 
   WINNING_LINES.each do |line|
     current_line = line.map { |num| brd[num] }
-    if current_line.count(marker)== 2 &&
+    if current_line.count(marker) == 2 &&
        current_line.count(INITIAL_MARKER) == 1
       return line[current_line.index(INITIAL_MARKER)]
     end
@@ -129,11 +129,9 @@ def who_goes_first?(initial_value)
       response = gets.chomp
 
       if response.start_with?('p')
-        'player'
-        break
+        return 'player'
       elsif response.start_with?('c')
-        'computer'
-        break
+        return 'computer'
       end
 
       prompt 'Please try again.'
@@ -147,7 +145,7 @@ score = { computer: 0, player: 0 }
 loop do
   board = initialize_board
   current_player = who_goes_first?(FIRST_MOVE)
-  
+
   loop do
     display_board(board)
     place_piece(board, current_player)
@@ -164,7 +162,7 @@ loop do
   else
     prompt "It's a tie!"
   end
-  
+
   if score.values.include?(5)
     prompt "#{detect_winner(board).capitalize} is the grand champion!"
     break
