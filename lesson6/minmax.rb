@@ -1,32 +1,111 @@
+require 'pry'
+
+FIRST_MOVE = 'choose'
+WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9],
+                 [1, 4, 7], [2, 5, 8], [3, 6, 9],
+                 [1, 5, 9], [3, 5, 7]]
+INITIAL_MARKER = ' '
+PLAYER_MARKER = 'X'
+COMPUTER_MARKER = 'O'
+
+def empty_squares(brd)
+  brd.keys.select { |num| brd[num] == INITIAL_MARKER }
+end
+
+def board_full?(brd)
+  empty_squares(brd).empty?
+end
+
+def someone_won?(brd)
+  !!detect_winner(brd)
+end
+
+def detect_winner(brd)
+  WINNING_LINES.each do |line|
+    if brd.values_at(*line).count(PLAYER_MARKER) == 3
+      return 'player'
+    elsif brd.values_at(*line).count(COMPUTER_MARKER) == 3
+      return 'computer'
+    end
+  end
+  nil
+end
+
 def deep_copy_board(brd)
   brd.map { |k, v| [k.dup, v.dup] }.to_h
 end
 
-def minmax(brd, player_marker, val=0)
-  new_brd = deep_copy_board(brd)
-  new_brd.each do |brd_loc, marker|
-    if marker == INITIAL_MARKER
+def switch_player(marker)
+  marker == COMPUTER_MARKER ? PLAYER_MARKER : COMPUTER_MARKER
+end
+
+# def minmax(brd, marker, vals)
+#   brd_copy = deep_copy_board(brd)
+#   brd_copy.each do |loc, mark|
+#     if mark == INITIAL_MARKER
+#       brd_copy[loc] = marker
+#       binding.pry
+#       if someone_won?(brd_copy)
+#         vals[loc] += 1 if detect_winner(brd_copy) == 'computer'
+#         vals[loc] -= 1 if detect_winner(brd_copy) == 'player'
+#         return nil
+#       elsif board_full?(brd_copy)
+#         return nil
+#       else
+#         minmax(brd_copy, switch_player(marker), vals)
+#       end
+#     end
+#   end
+# end
+# 
+# board = { 1=>'X', 2=>' ', 3=>'O', 4=>'O', 5=>' ', 6=>' ', 7=>'O', 8=>'X', 9=>'X' }
+# p minmax_values = empty_squares(board).map { |index| [index, 0] }.to_h
+# minmax(board, COMPUTER_MARKER, minmax_values)
+# p minmax_values
+#  
+# def minmax(brd, player_marker, vals)
+#   vals.each do |brd_loc, _|
+#     if brd[brd_loc] == INITIAL_MARKER
+#       brd_copy = deep_copy_board(brd)
+#       brd_copy[brd_loc] = player_marker
+# 
+#       if someone_won?(brd_copy)
+#         return 1 if detect_winner(brd_copy) == 'computer'
+#         return -1 if detect_winner(brd_copy) == 'player'
+#       elsif board_full?(brd_copy)
+#         return 0
+#       end
+# 
+#       player_marker = switch_player(player_marker)
+# 
+#       minmax(brd_copy, player_marker, vals)
+#     end
+#   end
+# end
+
+def minmax(brd, marker, loc, vals)
+  if someone_won?(brd)
+    vals[loc] += 1 if detect_winner(brd) == 'computer'
+    vals[loc] -= 1 if detect_winner(brd) == 'player'
+    return 0
+  elsif board_full?(brd)
+    return 0
+  else
+    empty_squares(brd).each do |new_loc|
       brd_copy = deep_copy_board(brd)
-      brd_copy[brd_loc] = player_marker
-
-      if board_full?(brd_copy)
-        if someone_won?(brd_copy)
-          return 1 if detect_winner(brd_copy) == 'computer'
-          return -1 if detect_winner(brd_copy) == 'player'
-        else
-          return 0
-        end
-      end
-
-      player_marker = if player_marker == PLAYER_MARKER
-                        COMPUTER_MARKER
-                      else
-                        PLAYER_MARKER
-                      end
-
-      minmax(brd_copy, player_marker, val)
+      brd_copy[new_loc] = marker
+      minmax(brd_copy, switch_player(marker), loc, vals)
     end
   end
 end
 
+board = { 1=>'O', 2=>'X', 3=>' ', 4=>' ', 5=>'X', 6=>' ', 7=>' ', 8=>' ', 9=>' ' }
 
+minmax_values = empty_squares(board).map { |index| [index, 0] }.to_h
+empty_squares(board).each do |loc|
+  new_board = deep_copy_board(board)
+  new_board[loc] = COMPUTER_MARKER
+  minmax(new_board, PLAYER_MARKER, loc, minmax_values)
+end
+binding.pry
+p minmax_values
