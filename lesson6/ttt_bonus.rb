@@ -85,16 +85,15 @@ def finder(brd, mode)
 end
 
 def computer_places_piece(brd)
-  square = nil
-  if finder(brd, :offense)
-    square = finder(brd, :offense)
-  elsif finder(brd, :defense)
-    square = finder(brd, :defense)
-  elsif brd[5] == INITIAL_MARKER
-    square = 5
-  else
-    square = empty_squares(brd).sample
-  end
+  square = if finder(brd, :offense)
+             finder(brd, :offense)
+           elsif finder(brd, :defense)
+             finder(brd, :defense)
+           elsif brd[5] == INITIAL_MARKER
+             5
+           else
+             empty_squares(brd).sample
+           end
   brd[square] = COMPUTER_MARKER
 end
 
@@ -158,7 +157,7 @@ loop do
   if someone_won?(board)
     score[detect_winner(board).to_sym] += 1
     prompt "#{detect_winner(board).capitalize} won!"
-    prompt "The score is computer: #{score[:computer]}, player: #{score[:player]}."
+    prompt "Score is computer: #{score[:computer]}, player: #{score[:player]}."
   else
     prompt "It's a tie!"
   end
