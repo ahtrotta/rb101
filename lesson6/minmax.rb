@@ -45,17 +45,12 @@ def score(brd)
   return 0
 end
 
-def minmax(brd)
-  return score(brd) if someone_won?(brd) || board_full?(brd)
+def minmax(brd, marker, vals)
+
 end 
 
 board = { 1=>'O', 2=>'X', 3=>' ', 4=>' ', 5=>'X', 6=>' ', 7=>' ', 8=>' ', 9=>' ' }
 
-minmax_values = empty_squares(board).map { |index| [index, 0] }.to_h
-empty_squares(board).each do |loc|
-  new_board = deep_copy_board(board)
-  new_board[loc] = COMPUTER_MARKER
-  minmax(new_board, PLAYER_MARKER, loc, minmax_values)
-end
-binding.pry
+
+
 p minmax_values
