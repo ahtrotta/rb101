@@ -1,3 +1,10 @@
+=begin
+
+1. iterate through empty spaces
+  - place marker on empty spot
+
+=end
+
 require 'pry'
 
 FIRST_MOVE = 'choose'
@@ -39,18 +46,34 @@ def switch_player(marker)
   marker == COMPUTER_MARKER ? PLAYER_MARKER : COMPUTER_MARKER
 end
 
-def score(brd)
+def score_board(brd)
   return 1 if detect_winner(brd) == 'computer'
   return -1 if detect_winner(brd) == 'player'
   return 0
 end
 
-def minmax(brd, marker, vals)
-
+def minmax(brd, marker)
+  return 1 if detect_winner(brd) == 'computer'
+  return -1 if detect_winner(brd) == 'player'
+  return 0 if board_full?(brd)
+  
+  depth_score = []
+  brd_copy = deep_copy_board(brd)
+  empty_squares(brd_copy).each do |inner_loc|
+    brd_copy[inner_loc] = marker
+    depth_score << score_board(brd_copy)
+  end
+  minmax(brd_copy, switch_player(marker))
 end 
 
-board = { 1=>'O', 2=>'X', 3=>' ', 4=>' ', 5=>'X', 6=>' ', 7=>' ', 8=>' ', 9=>' ' }
+board = { 1=>'X', 2=>' ', 3=>'O', 4=>'O', 5=>' ', 6=>' ', 7=>'O', 8=>'X', 9=>'X' }
 
+score = empty_squares(board).map { |loc| [loc, 0] }.to_h
+board_clone = deep_copy_board(board)
 
+empty_squares(board_clone).each do |loc|
+  board_clone[loc] = COMPUTER_MARKER
+  score[loc] = minmax(board_clone, PLAYER_MARKER)
+end
 
-p minmax_values
+p score
