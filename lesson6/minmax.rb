@@ -53,17 +53,17 @@ def score_board(brd)
 end
 
 def minmax(brd, marker)
-  return 1 if detect_winner(brd) == 'computer'
-  return -1 if detect_winner(brd) == 'player'
-  return 0 if board_full?(brd)
-  
-  depth_score = []
+  return score_board(brd) if someone_won?(brd) || board_full?(brd)
+
+  scores = []
+  moves = []
+
   brd_copy = deep_copy_board(brd)
   empty_squares(brd_copy).each do |inner_loc|
     brd_copy[inner_loc] = marker
-    depth_score << score_board(brd_copy)
+    scores << minmax(brd_copy, switch_player(marker))
+    moves << inner_loc
   end
-  minmax(brd_copy, switch_player(marker))
 end 
 
 board = { 1=>'X', 2=>' ', 3=>'O', 4=>'O', 5=>' ', 6=>' ', 7=>'O', 8=>'X', 9=>'X' }
