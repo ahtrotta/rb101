@@ -142,17 +142,14 @@ loop do
 
   if dealer_hand_value > MAX_VALUE
     game_end(score, :dealer_busted)
-    break unless play_again?(score)
   elsif dealer_hand_value > player_hand_value
     game_end(score, :dealer_won)
-    break unless play_again?(score)
   elsif dealer_hand_value < player_hand_value
     game_end(score, :player_won)
-    break unless play_again?(score)
   else
     game_end(score, :tied)
-    break unless play_again?(score)
   end
+  break unless play_again?(score)
 end
 
 if score[:player] == 5
