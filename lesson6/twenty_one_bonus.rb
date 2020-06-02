@@ -60,9 +60,7 @@ def game_end(score, outcome)
   prompt "Player: #{score[:player]}, Dealer: #{score[:dealer]}"
 end
 
-def play_again?(score, outcome)
-  game_end(score, outcome)
-
+def play_again?(score)
   return false if score.values.any?(5)
 
   loop do
@@ -115,7 +113,8 @@ loop do
   if player_hand_value > MAX_VALUE
     prompt "Your hand: #{hand_string(players_hand)}. " \
            "Hand value: #{player_hand_value}"
-    break unless play_again?(score, :player_busted)
+    game_end(score, :player_busted)
+    break unless play_again?(score)
     next
   else
     prompt "You chose to stay. Dealer's turn."
@@ -142,13 +141,17 @@ loop do
          "Hand value: #{dealer_hand_value}"
 
   if dealer_hand_value > MAX_VALUE
-    break unless play_again?(score, :dealer_busted)
+    game_end(score, :dealer_busted)
+    break unless play_again?(score)
   elsif dealer_hand_value > player_hand_value
-    break unless play_again?(score, :dealer_won)
+    game_end(score, :dealer_won)
+    break unless play_again?(score)
   elsif dealer_hand_value < player_hand_value
-    break unless play_again?(score, :player_won)
+    game_end(score, :player_won)
+    break unless play_again?(score)
   else
-    break unless play_again?(score, :tied)
+    game_end(score, :tied)
+    break unless play_again?(score)
   end
 end
 
