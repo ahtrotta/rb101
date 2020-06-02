@@ -29,65 +29,61 @@ def initialize_deck
 end
 
 def get_value(hand)
-  hand.map { |card| card[:value] }.inject(:+)
-end
-
-def number_of_aces(hand)
-  hand.map { |card| card[:name] }.count('Ace')
-end
-
-def busted?(hand)
-  hand_value = get_value(hand)
-  aces = number_of_aces(hand)
+  hand_value = hand.map { |card| card[:value] }.inject(:+)
+  aces = hand.map { |card| card[:name] }.count('Ace')
   while hand_value > 21 && aces > 0
     hand_value -= 10
     aces -= 1
   end
-  hand_value > 21
+  hand_value
 end
 
-def game_over(outcome)
-  prompt "You #{outcome}! Play again? (y) or (n)"
-  answer = gets.chomp.downcase
+def play_again?
+  loop do
+    prompt "Play again? (y) or (n)"
+    answer = gets.chomp.downcase
+    next unless answer == 'y' || answer == 'n'
+    break answer == 'y'
+  end
+end
+
+def hand_string(hand, hidden=false)
+  if hidden
+    hand[1..-1].map { |card| card[:name] }.join(', ')
+  else
+    hand.map { |card| card[:name] }.join(', ')
+  end
 end
 
 loop do
   deck = initialize_deck.shuffle
   players_hand = deck.pop(2)
   dealers_hand = deck.pop(2)
-  visible_dealer_cards = dealers_hand[0][:name]
 
   loop do
-    player_cards = players_hand.map { |card| card[:name] }
-    prompt "Your hand: #{player_cards.join(', ')}"
-    prompt "Dealer's hand: #{visible_dealer_cards} and unknown card"
+    prompt "Your hand: #{hand_string(players_hand)}"
+    prompt "Dealer's hand: #{hand_string(dealers_hand, true)} and unknown card."
     prompt "(h)it or (s)tay?"
     answer = gets.chomp
     break if answer.downcase.start_with?('s')
     drawn_card = deck.pop(1)[0]
     prompt "You drew: #{drawn_card[:name]} of #{drawn_card[:suit]}"
     players_hand << drawn_card
-    break if busted?(players_hand)
+    break if get_value(players_hand) > 21
   end
 
-  if busted?(players_hand)
-    player_cards = players_hand.map { |card| card[:name] }
-    prompt "Your hand: #{player_cards.join(', ')}"
-    break if game_over('lost').start_with?('n')
+  if get_value(players_hand) > 21
+    prompt "You busted! Your hand: #{hand_string(players_hand)}"
+    break unless play_again?
+    next
   else
-    prompt "You chose to stay! Dealer's turn."
+    prompt "You chose to stay. Dealer's turn."
   end
 
   loop do
-    hand_value = get_value(dealers_hand)
-    aces = number_of_aces(dealers_hand)
-    while hand_value > 17 && aces > 0
-      hand_value -= 10
-      aces -= 1
-    end
-    if hand_value <= 17
+    if get_value(dealers_hand) <= 17
       dealer_card = deck.pop(1)[0]
-      prompt "Dealer chose to hit. Dealer drew #{dealer_card[:name]}."
+      prompt "Dealer chose to hit. Dealer drew: #{dealer_card[:name]}."
       dealers_hand << dealer_card
     else
       prompt "Dealer chose to stay."
@@ -95,14 +91,22 @@ loop do
     end
   end
 
-  if busted?(dealers_hand)
-    break if game_over('won').start_with?('n')
+  prompt "Dealer's hand: #{hand_string(dealers_hand)}. " \
+         "Hand value: #{get_value(dealers_hand)}"
+  prompt "Your hand: #{hand_string(players_hand)}. " \
+         "Hand value: #{get_value(players_hand)}"
+
+  if get_value(dealers_hand) > 21
+    prompt "Dealer busted! You won!"
   elsif get_value(dealers_hand) > get_value(players_hand)
-    break if game_over('lost').start_with?('n')
+    prompt "You lost!"
   elsif get_value(dealers_hand) < get_value(players_hand)
-    break if game_over('won').start_with?('n')
+    prompt "You won!"
   else
-    break if game_over('tied').start_with?('n')
+    prompt "You tied!"
   end
 
+  break unless play_again?
 end
+
+prompt "Thanks for playing Twenty One!"
