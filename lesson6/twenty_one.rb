@@ -40,6 +40,7 @@ end
 
 def play_again?
   loop do
+    puts "=================================="
     prompt "Play again? (y) or (n)"
     answer = gets.chomp.downcase
     next unless answer == 'y' || answer == 'n'
@@ -66,7 +67,7 @@ loop do
     prompt "(h)it or (s)tay?"
     answer = gets.chomp
     break if answer.downcase.start_with?('s')
-    drawn_card = deck.pop(1)[0]
+    drawn_card = deck.pop
     prompt "You drew: #{drawn_card[:name]} of #{drawn_card[:suit]}"
     players_hand << drawn_card
     break if get_value(players_hand) > 21
@@ -82,8 +83,9 @@ loop do
 
   loop do
     if get_value(dealers_hand) <= 17
-      dealer_card = deck.pop(1)[0]
-      prompt "Dealer chose to hit. Dealer drew: #{dealer_card[:name]}."
+      dealer_card = deck.pop
+      prompt "Dealer chose to hit. Dealer drew: " \
+             "#{dealer_card[:name]} of #{dealer_card[:suit]}."
       dealers_hand << dealer_card
     else
       prompt "Dealer chose to stay."
