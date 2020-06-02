@@ -87,16 +87,13 @@ loop do
       prompt "Dealer chose to hit. Dealer drew: " \
              "#{dealer_card[:name]} of #{dealer_card[:suit]}."
       dealers_hand << dealer_card
+    elsif get_value(dealers_hand) > 21
+      break
     else
       prompt "Dealer chose to stay."
       break
     end
   end
-
-  prompt "Dealer's hand: #{hand_string(dealers_hand)}. " \
-         "Hand value: #{get_value(dealers_hand)}"
-  prompt "Your hand: #{hand_string(players_hand)}. " \
-         "Hand value: #{get_value(players_hand)}"
 
   if get_value(dealers_hand) > 21
     prompt "Dealer busted! You won!"
@@ -107,6 +104,11 @@ loop do
   else
     prompt "You tied!"
   end
+
+  prompt "Dealer's hand: #{hand_string(dealers_hand)}. " \
+         "Hand value: #{get_value(dealers_hand)}"
+  prompt "Your hand: #{hand_string(players_hand)}. " \
+         "Hand value: #{get_value(players_hand)}"
 
   break unless play_again?
 end
