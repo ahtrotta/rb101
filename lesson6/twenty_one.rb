@@ -3,7 +3,7 @@ require 'pry'
 SUITS = %w(hearts diamonds spades clubs)
 
 def prompt(msg)
-  puts ">>> #{msg}"
+  puts ">>  #{msg}"
 end
 
 def get_card_info(card_index)
@@ -40,7 +40,6 @@ end
 
 def play_again?
   loop do
-    puts "=================================="
     prompt "Play again? (y) or (n)"
     answer = gets.chomp.downcase
     next unless answer == 'y' || answer == 'n'
@@ -62,8 +61,11 @@ loop do
   dealers_hand = deck.pop(2)
 
   loop do
-    prompt "Your hand: #{hand_string(players_hand)}"
-    prompt "Dealer's hand: #{hand_string(dealers_hand, true)} and unknown card."
+    system 'clear'
+    prompt "Your hand: #{hand_string(players_hand)}. " \
+           "Hand value: #{get_value(players_hand)}"
+    prompt "Dealer's hand: #{hand_string(dealers_hand, true)}" \
+           " and an unknown card."
     prompt "(h)it or (s)tay?"
     answer = gets.chomp
     break if answer.downcase.start_with?('s')
@@ -73,6 +75,7 @@ loop do
     break if get_value(players_hand) > 21
   end
 
+  system 'clear'
   if get_value(players_hand) > 21
     prompt "You busted! Your hand: #{hand_string(players_hand)}"
     break unless play_again?
