@@ -43,7 +43,7 @@ end
 def game_end(score, outcome)
   case outcome
   when :player_busted
-    prompt "You busted!" 
+    prompt "You busted!"
     score[:dealer] += 1
   when :dealer_busted
     prompt "Dealer busted!"
